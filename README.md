@@ -4,43 +4,38 @@ This is the official PyTorch implementation of the paper **"SMG-Fusion: A Superp
 
 ## 📂 Project Structure
 
-The directory structure for training and testing should be organized as follows:
+The directory structure is organized as follows:
 
 ```text
 SMG-Fusion/
-├── data/                  # Contains pre-processed .h5 training data (e.g., MSRS)
-├── models/                # Pre-trained SMG-Fusion weights
-├── weights/               # Pre-trained YOLOv9-c weights for detection
+├── models/                # Pre-trained SMG-Fusion weights (.pth)
 ├── test_img/              # Source images for inference
 │   ├── MSRS/              # Dataset Name
 │   │   ├── ir/            # Infrared images
 │   │   └── vi/            # Visible images
-│   ├── TNO/
-│   │   ├── ir/
-│   │   └── vi/
 │   └── ...
 ├── test_result/           # Output folder for fused images
-├── dataprocessing.py      # Script to convert raw images to .h5 format
-├── train.py               # Script for training the model
-├── test_IVF.py            # Main inference script
+├── utils/                 # Utility scripts (image I/O, logger, etc.)
+├── dataprocessing.py      # Script to convert raw images to .h5 format for training
+├── eval.py                # Script for quantitative evaluation (Compute EN, SD, SSIM, etc.)
+├── net.py                 # Backbone network definitions (Encoder/Decoder)
 ├── RGB.py                 # Tool to restore color from grayscale fusion results
-├── smg_fusion.py          # Network architecture definition
-└── requirements.txt       # Python dependencies
+├── smg_fusion.py          # Core fusion network architecture (MS_GAT_Fusion)
+├── test_IVF.py            # Main inference script
+└── train.py               # Script for training the model
 ```
 
 ## 🛠️ Environment Setup
 
-Please install the required dependencies:
+Please ensure you have Python and PyTorch installed. Install the required dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install torch torchvision opencv-python numpy h5py scipy
 ```
 
 ## 🚀 Usage
 
 ### 1. Data Preparation
-
-We provide the pre-processed **MSRS** dataset in the `data/` folder, so you can start training immediately.
 
 If you want to train on a custom dataset, organize your images and run the processing script to convert them into `.h5` format:
 
@@ -50,7 +45,7 @@ python dataprocessing.py
 
 ### 2. Training
 
-To train the SMG-Fusion model from scratch, run:
+To train the SMG-Fusion model from scratch:
 
 ```bash
 python train.py
@@ -72,7 +67,15 @@ python test_IVF.py
 ```
 The fused images will be saved in the `test_result/` folder.
 
-### 4. Color Restoration
+### 4. Evaluation
+
+To calculate quantitative metrics (such as EN, SD, SF, SSIM, etc.) for the fused images:
+
+```bash
+python eval.py
+```
+
+### 5. Color Restoration
 
 Since the network processes images in grayscale to focus on structure and texture, the raw output might be single-channel. To restore the color information from the original visible image (YCbCr conversion), run:
 
@@ -80,19 +83,23 @@ Since the network processes images in grayscale to focus on structure and textur
 python RGB.py
 ```
 
+## 📊 Performance
+
+Quantitative evaluation results on the **TNO** dataset:
+
+| Model | EN | SD | SF | MI | SCD | VIF | Qabf | SSIM | CC | AG | FMI | MS-SSIM |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **SMG** | 7.10 | 44.53 | 13.57 | 2.68 | 1.63 | 0.83 | 0.61 | 1.31 | 0.49 | 5.01 | 1.51 | 1.36 |
+
 ## 📚 Datasets
 
-We evaluated our method on the following public datasets. Please cite the original authors if you use these datasets.
+We evaluated our method on the following public datasets:
 
-*   **MSRS Dataset**: [[Link to Repository](https://github.com/Linfeng-Tang/MSRS)]
-    *   Used for training and testing. Contains aligned IR-VIS pairs with semantic labels.
-*   **RoadScene Dataset**: [Link to Repository](https://github.com/hanna-xu/RoadScene)]
-    *   Focuses on road traffic scenarios with complex illumination.
-*   **TNO Dataset**: [Link to Dataset](https://figshare.com/articles/dataset/TNO_Image_Fusion_Dataset/1008029)]
-    *   Classic benchmark for military and surveillance scenarios.
-*   **M3FD Dataset**: [Link to Repository](https://github.com/JinyuanLiu-CV/TarDAL)]
-    *   Used for the downstream object detection task.
+*   **MSRS Dataset**: [[Link](https://github.com/Linfeng-Tang/MSRS)] - Used for training and testing.
+*   **RoadScene Dataset**: [[Link](https://github.com/hanna-xu/RoadScene)]
+*   **TNO Dataset**: [[Link](https://figshare.com/articles/dataset/TNO_Image_Fusion_Dataset/1008029)]
 
 ## 📧 Contact
 
 If you have any questions, please contact: `2408540010@kmu.stu.edu.cn`
+```
