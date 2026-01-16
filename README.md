@@ -69,11 +69,19 @@ The fused images will be saved in the `test_result/` folder.
 
 ### 4. Evaluation
 
-To calculate quantitative metrics (such as EN, SD, SF, SSIM, etc.) for the fused images:
+To calculate quantitative metrics (such as EN, SD, SF, SSIM, etc.) for the fused images, run the evaluation script:
 
 ```bash
 python eval.py
 ```
+
+You can obtain the following performance metrics on the **TNO dataset** by running the evaluation program:
+
+| Model | EN | SD | SF | MI | SCD | VIF | Qabf | SSIM | CC | AG | FMI | MS-SSIM |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **SMG** | 7.10 | 44.53 | 13.57 | 2.68 | 1.63 | 0.83 | 0.61 | 1.31 | 0.49 | 5.01 | 1.51 | 1.36 |
+
+*Make sure to configure the paths to your ground truth (ir/vi) and generated fusion results inside `eval.py` before running.*
 
 ### 5. Color Restoration
 
@@ -82,14 +90,6 @@ Since the network processes images in grayscale to focus on structure and textur
 ```bash
 python RGB.py
 ```
-
-## 📊 Performance
-
-Quantitative evaluation results on the **TNO** dataset:
-
-| Model | EN | SD | SF | MI | SCD | VIF | Qabf | SSIM | CC | AG | FMI | MS-SSIM |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **SMG** | 7.10 | 44.53 | 13.57 | 2.68 | 1.63 | 0.83 | 0.61 | 1.31 | 0.49 | 5.01 | 1.51 | 1.36 |
 
 ## 📚 Datasets
 
